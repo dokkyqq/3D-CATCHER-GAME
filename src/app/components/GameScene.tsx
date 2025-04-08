@@ -3,6 +3,7 @@
 import { Canvas } from '@react-three/fiber'
 import dynamic from 'next/dynamic'
 import { useCallback, useEffect, useState } from 'react'
+
 // import * as THREE from 'three'
 
 import FallingProduct from './FallingProduct'
@@ -14,18 +15,30 @@ const productModels = [
   '/models/bananya_birbo.glb'
 ]
 
-const width = window.innerWidth
-
 export default function GameScene() {
+  const [width, setWidth] = useState(0)
   const [x, setX] = useState(0)
   const [products, setProducts] = useState<
     Array<{ id: string; x: number; speed: number; model: string }>
   >([])
 
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setWidth(window.innerWidth)
+
+      const handleResize = () => {
+        setWidth(window.innerWidth)
+      }
+
+      window.addEventListener('resize', handleResize)
+      return () => window.removeEventListener('resize', handleResize)
+    }
+  }, [])
+
   const handleCatch = (id: string) => {
     setProducts(prev => prev.filter(p => p.id !== id))
   }
-  
+
   const handleMiss = (id: string) => {
     setProducts(prev => prev.filter(p => p.id !== id))
   }
@@ -97,7 +110,7 @@ export default function GameScene() {
       {/* 3D сцена с корзиной */}
       <Canvas
         shadows
-        gl={{ antialias: true}}
+        gl={{ antialias: true }}
         camera={{ position: [0, 2, 6], fov: 50 }}
         style={{ position: 'relative', zIndex: 3 }}
         // toneMapping={THREE.ACESFilmicToneMapping}
@@ -107,15 +120,15 @@ export default function GameScene() {
         <pointLight position={[10, 10, 10]} intensity={1.2} />
         {products.map(product => (
           <FallingProduct
-          key={product.id}
-          id={product.id}
-          positionX={product.x}
-          speed={product.speed}
-          modelPath={product.model}
-          basketX={x}
-          onCatch={handleCatch}
-          onMiss={handleMiss}
-        />
+            key={product.id}
+            id={product.id}
+            positionX={product.x}
+            speed={product.speed}
+            modelPath={product.model}
+            basketX={x}
+            onCatch={handleCatch}
+            onMiss={handleMiss}
+          />
         ))}
         <BasketModel x={x} />
       </Canvas>
