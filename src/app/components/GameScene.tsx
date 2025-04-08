@@ -15,25 +15,18 @@ const productModels = [
   '/models/bananya_birbo.glb'
 ]
 
+let width = 0
+if(typeof window !== 'undefined') {
+  width = window.innerWidth / 4
+}
+
 export default function GameScene() {
-  const [width, setWidth] = useState(0)
   const [x, setX] = useState(0)
+  console.log(width);
+  
   const [products, setProducts] = useState<
     Array<{ id: string; x: number; speed: number; model: string }>
   >([])
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setWidth(window.innerWidth)
-
-      const handleResize = () => {
-        setWidth(window.innerWidth)
-      }
-
-      window.addEventListener('resize', handleResize)
-      return () => window.removeEventListener('resize', handleResize)
-    }
-  }, [])
 
   const handleCatch = (id: string) => {
     setProducts(prev => prev.filter(p => p.id !== id))
