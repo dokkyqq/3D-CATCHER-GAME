@@ -1928,6 +1928,11 @@ hls.js@^1.5.17:
   resolved "https://registry.yarnpkg.com/hls.js/-/hls.js-1.6.1.tgz#2a808924d90465e44db8bf29dde31de8e4d313cf"
   integrity sha512-7GOkcqn0Y9EqU2OJZlzkwxj9Uynuln7URvr7dRjgqNJNZ5UbbjL/v1BjAvQogy57Psdd/ek1u2s6IDEFYlabrA==
 
+howler@^2.2.4:
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/howler/-/howler-2.2.4.tgz#bd3df4a4f68a0118a51e4bd84a2bfc2e93e6e5a1"
+  integrity sha512-iARIBPgcQrwtEr+tALF+rapJ8qSc+Set2GJQl7xT1MQzWaVkFebdJhR3alVlSiUf5U7nAANKuj3aWpwerocD5w==
+
 ieee754@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.2.1.tgz#8eb7a10a63fff25d15a57b001586d177d1b0d352"
@@ -3281,6 +3286,13 @@ uri-js@^4.2.2:
   integrity sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==
   dependencies:
     punycode "^2.1.0"
+
+use-sound@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/use-sound/-/use-sound-5.0.0.tgz#62894ecf5ac3810c3f105c783bb93b15ad9157a6"
+  integrity sha512-MNHT3FFC5HxNCrgZtrnpIMJI2cw/0D2xismcrtyht8BTuF5FhFhb57xO/jlQr2xJaFrc/0btzRQvGyHQwB7PVA==
+  dependencies:
+    howler "^2.2.4"
 
 use-sync-external-store@^1.2.2, use-sync-external-store@^1.4.0:
   version "1.5.0"

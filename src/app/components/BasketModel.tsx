@@ -38,7 +38,7 @@ export default function BasketModel({ x }: { x: number }) {
     <primitive
       object={gltf.scene}
       position={[x, -3, 0]}
-      scale={[1, 1, 1]}
+      scale={[0.6, 0.6, 0.6]}
       rotation={[-0.3, Math.PI, rotation]}
     />
   )

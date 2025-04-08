@@ -2,14 +2,33 @@
 
 import { Canvas } from '@react-three/fiber'
 import dynamic from 'next/dynamic'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+// import * as THREE from 'three'
+
+import FallingProduct from './FallingProduct'
 
 const BasketModel = dynamic(() => import('./BasketModel'))
+const productModels = [
+  '/models/cherry_milk.glb',
+  // '/models/kitty_breggfast.glb',
+  '/models/bananya_birbo.glb'
+]
 
 const width = window.innerWidth
 
 export default function GameScene() {
   const [x, setX] = useState(0)
+  const [products, setProducts] = useState<
+    Array<{ id: string; x: number; speed: number; model: string }>
+  >([])
+
+  const handleCatch = (id: string) => {
+    setProducts(prev => prev.filter(p => p.id !== id))
+  }
+  
+  const handleMiss = (id: string) => {
+    setProducts(prev => prev.filter(p => p.id !== id))
+  }
 
   const handleTouchMove = useCallback((e: React.TouchEvent) => {
     const touch = e.touches[0]
@@ -23,6 +42,28 @@ export default function GameScene() {
     // Обновляем состояние с новой позицией
     console.log(width)
     setX(finalPosX)
+  }, [])
+
+  // Генерация падающих продуктов
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const randomX = Math.random() * 3 - 1.5
+      const randomSpeed = Math.random() * 0.03 + 0.015
+      const randomModel =
+        productModels[Math.floor(Math.random() * productModels.length)]
+
+      setProducts(prev => [
+        ...prev,
+        {
+          id: crypto.randomUUID(),
+          x: randomX,
+          speed: randomSpeed,
+          model: randomModel
+        }
+      ])
+    }, 1500)
+
+    return () => clearInterval(interval)
   }, [])
 
   return (
@@ -55,12 +96,27 @@ export default function GameScene() {
 
       {/* 3D сцена с корзиной */}
       <Canvas
+        shadows
+        gl={{ antialias: true}}
+        camera={{ position: [0, 2, 6], fov: 50 }}
         style={{ position: 'relative', zIndex: 3 }}
-        camera={{ position: [0, 2, 6] }}
+        // toneMapping={THREE.ACESFilmicToneMapping}
       >
-        <ambientLight intensity={1.5} />
-        <directionalLight position={[5, 5, 5]} intensity={2} />
-        <pointLight position={[10, 10, 10]} />
+        <ambientLight intensity={1.2} />
+        <directionalLight position={[5, 10, 5]} intensity={1.5} castShadow />
+        <pointLight position={[10, 10, 10]} intensity={1.2} />
+        {products.map(product => (
+          <FallingProduct
+          key={product.id}
+          id={product.id}
+          positionX={product.x}
+          speed={product.speed}
+          modelPath={product.model}
+          basketX={x}
+          onCatch={handleCatch}
+          onMiss={handleMiss}
+        />
+        ))}
         <BasketModel x={x} />
       </Canvas>
     </div>
