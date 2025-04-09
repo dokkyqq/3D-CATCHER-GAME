@@ -17,7 +17,7 @@ const productModels = [
 
 let width = 0
 if(typeof window !== 'undefined') {
-  width = window.innerWidth / 4
+  width = window.innerWidth
 }
 
 export default function GameScene() {
