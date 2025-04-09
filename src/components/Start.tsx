@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 export default function Start() {
-  if (window.Telegram) {
+  if (typeof window !== 'undefined' && window.Telegram) {
     const tg = window.Telegram.WebApp
     const user = tg.initDataUnsafe?.user
     if (user) {
