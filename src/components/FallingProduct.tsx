@@ -1,13 +1,15 @@
 'use client'
 
 import { useGLTF } from '@react-three/drei'
+import { useFrame } from '@react-three/fiber'
+import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 import { Group } from 'three'
-import { useFrame } from '@react-three/fiber'
 import useSound from 'use-sound'
+
 import { useGameState } from '@/store/useStore'
+
 import { useSaveScore } from '@/features/game/model/useSaveScore'
-import { useRouter } from 'next/router'
 import { useTelegramUser } from '@/shared/lib/telegram'
 
 interface FallingProductProps {
@@ -42,12 +44,15 @@ export default function FallingProduct({
 
   useEffect(() => {
     if (miss >= 3 && user) {
-      saveScore.mutate({ userId: user.id, value: score }, {
-        onSuccess: () => {
-          reset()
-          router.push('/')
-        },
-      })
+      saveScore.mutate(
+        { userId: user.id, value: score },
+        {
+          onSuccess: () => {
+            reset()
+            router.push('/')
+          }
+        }
+      )
     }
   }, [miss])
 
@@ -105,13 +110,13 @@ export default function FallingProduct({
 
     // Ушло мимо корзины — плавное исчезновение вниз
     else if (isFallingMissed) {
-      addMiss()
       ref.current.position.y -= 0.08
       ref.current.rotation.x += rotationSpeedX
       ref.current.rotation.y += rotationSpeedY
 
       if (ref.current.position.y < -5) {
         onMiss(id)
+        addMiss()
       }
     }
   })

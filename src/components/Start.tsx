@@ -3,12 +3,16 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
+import { useSaveUser } from '@/features/user/model/useSaveUser'
+
 export default function Start() {
+  const saveUser = useSaveUser()
   if (typeof window !== 'undefined' && window.Telegram) {
     const tg = window.Telegram.WebApp
     const user = tg.initDataUnsafe?.user
     if (user) {
       const avatarUrl = `https://ui-avatars.com/api/?name=${user.first_name}&background=random`
+      saveUser.mutate({ id: user.id, avatar: avatarUrl, name: user.first_name })
       return (
         <div className='h-100vh h-full w-full bg-amber-100'>
           <div className='container mx-auto px-4'>
