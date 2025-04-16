@@ -1,11 +1,14 @@
 'use client'
 
 import { useGLTF } from '@react-three/drei'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Group } from 'three'
 import { useFrame } from '@react-three/fiber'
 import useSound from 'use-sound'
-import { useStore } from '@/store/useStore'
+import { useGameState } from '@/store/useStore'
+import { useSaveScore } from '@/features/game/model/useSaveScore'
+import { useRouter } from 'next/router'
+import { useTelegramUser } from '@/shared/lib/telegram'
 
 interface FallingProductProps {
   id: string
@@ -28,7 +31,25 @@ export default function FallingProduct({
 }: FallingProductProps) {
   const { scene } = useGLTF(modelPath)
   const ref = useRef<Group>(null)
-  const increaseScore = useStore(state => state.increaseScore)
+  const increaseScore = useGameState(state => state.increaseScore)
+  const saveScore = useSaveScore()
+  const { user } = useTelegramUser()
+  const score = useGameState(state => state.score)
+  const addMiss = useGameState(state => state.addMiss)
+  const miss = useGameState(state => state.misses)
+  const reset = useGameState(state => state.reset)
+  const router = useRouter()
+
+  useEffect(() => {
+    if (miss >= 3 && user) {
+      saveScore.mutate({ userId: user.id, value: score }, {
+        onSuccess: () => {
+          reset()
+          router.push('/')
+        },
+      })
+    }
+  }, [miss])
 
   // Безопасные и ограниченные скорости вращения
   const [rotationSpeedX] = useState(() => Math.random() * 0.01 + 0.005)
@@ -84,6 +105,7 @@ export default function FallingProduct({
 
     // Ушло мимо корзины — плавное исчезновение вниз
     else if (isFallingMissed) {
+      addMiss()
       ref.current.position.y -= 0.08
       ref.current.rotation.x += rotationSpeedX
       ref.current.rotation.y += rotationSpeedY
