@@ -5,7 +5,7 @@ const GameScene = dynamic(() => import('@/components/GameScene'))
 
 export default function Home() {
   return (
-    <div className='relative h-[100vh] w-full'>
+    <div className='relative h-[100vh] w-full overflow-hidden'>
       <Top />
       <GameScene />
     </div>
